@@ -1,0 +1,61 @@
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.82);
+}
+
+.m-header {
+    margin-bottom: 5px;
+    height: 27px;
+}
+
+.m-header > span {
+    margin: 0;
+    font-weight: normal;
+    font-size: large;
+    height: 100%;
+}
+
+.m-window {
+    position: relative;
+    color: #b1b1b1;
+    background: #0c0c0c;
+    border: 2px solid #383838;
+    margin: 25px auto;
+    padding: 5px;
+    width: 75%;
+    
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2),0 6px 20px 0 rgba(0,0,0,0.19);
+
+    
+    animation-name: showmodal;
+    animation-duration: 0.5s
+}
+
+.m-close {
+    color: white;
+    float: right;
+    font-weight: bold;
+    padding: 5px 8px;
+    background-color: #ef2c2c;
+    cursor: pointer;
+}
+
+.m-close:hover , .m-close:focus {
+    background-color: #f74e4e;
+}
+
+.modal_content {
+    height: 400px;
+}
+
+@keyframes showmodal {
+    from { top: -300px; opacity: 0 }
+    to { top: 0; opacity: 1 }
+}

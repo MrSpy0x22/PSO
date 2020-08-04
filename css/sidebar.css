@@ -1,0 +1,47 @@
+table {
+    width: 100%;
+}
+
+td {
+    width: 50%;
+}
+
+td > * {
+    width: 100%;
+    display: block;
+}
+
+.table-key {
+    color: #67A5DC;
+}
+
+#gui-btn_state ,
+#gui-btn_refresh {
+    background: #38383D;
+    color: #b1b1b1;
+    border-radius: 2px;
+    padding: 5px;
+    border: none;
+}
+#gui-btn_state:hover ,
+#gui-btn_refresh:hover {
+    background: #353B48;
+}
+
+.table-value > input ,
+.table-value > select {
+    color: #FF7DE9;
+    background: #181818;
+    border: 1px solid #383838;
+    text-align: center;
+}
+
+fieldset {
+    border: none;
+    border-top: 1px solid #6f6f6f;
+}
+
+fieldset > legend {
+    color: #6f6f6f;
+    padding: 0 5px 0 5px;
+}

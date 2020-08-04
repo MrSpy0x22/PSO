@@ -1,0 +1,160 @@
+<!doctype html>
+<html>
+
+    <head>
+        <meta charset="utf-8">
+
+        <!-- STYLES -->
+        <link href="css/main.css" rel="stylesheet">
+        <link href="css/container.css" rel="stylesheet">
+        <link href="css/sidebar.css" rel="stylesheet">
+        <link href="css/modal.css" rel="stylesheet">
+
+        <!-- SCRIPTS -->
+        <script type="text/javascript" src="js/functions.js"></script>
+        <script type="text/javascript" src="js/pso.js"></script>
+        <script type="text/javascript" src="js/gui.js" defer></script>
+
+        <!-- PLOTLY: OFFLINE -->
+        <script type="text/javascript" src="js/plotly-latest.min.js"></script>
+        <!-- PLOTLY: ONLINE
+            script src="https://cdn.plot.ly/plotly-latest.min.js"></script-->
+
+        <title>Optymalizacja funkcji</title>
+    </head>
+
+    <body>
+
+        <!-- POP-UP Z PODSUMOWANIEM -->
+        <div id="popup_result" class="modal">
+            <div class="m-window">
+                <div class="m-header">
+                    <span id="modal_close" class="m-close">&times;</span>
+                    <span>Podsumowanie</span>
+                </div>
+                <div id="modal_content"></div>
+            </div>
+        </div>
+
+        <!-- OKNO APLIKACJI - KONTENER -->
+        <div id="container">
+
+            <!-- SIDEBAR Z KONFIGURACJĄ -->
+            <div class="c-sidebar">
+                <fieldset>
+                    <table>
+                        <tr>
+                            <td><button id="gui-btn_state">Start</button></td>
+                            <td><button id="gui-btn_refresh">Odśwież</button></td>
+                        </tr>
+                    </table>
+                </fieldset>
+                <fieldset>
+                    <legend>Funkcja</legend>
+                    <table>
+                        <tr>
+                            <td class="table-key"><span>Funkcja</span></td>
+                            <td class="table-value"><select id="gui-select_fun"></select></td>
+                        </tr>
+                        <tr>
+                            <td class="table-key"><span>Odwrotne wartości</span></td>
+                            <td class="table-value"><input id="gui-check_negatives" type="checkbox"></td>
+                        </tr>
+                        <tr>
+                            <td class="table-key"><span>Liczba iteracji</span></td>
+                            <td class="table-value"><input id="gui-nof_iterations" type="number"></td>
+                        </tr>
+                        <tr>
+                            <td class="table-key"><span>Liczba serii</span></td>
+                            <td class="table-value"><input id="gui-nof_series" type="number" min="1" max="10" value="1"></td>
+                        </tr>
+                        <tr>
+                            <td class="table-key"><span>Podgląd 3D</span></td>
+                            <td class="table-value"><input id="gui-check_3d" type="checkbox"></td>
+                        </tr>
+                    </table>
+                </fieldset>
+                <fieldset>
+                    <legend>Osie</legend>
+                    <table>
+                        <tr>
+                            <td class="table-key"><span>Wartość X-min</span></td>
+                            <td class="table-value"><input id="gui-nof_minx" type="number" value="" step="0.01"></td>
+                        </tr>
+                        <tr>
+                            <td class="table-key"><span>Wartość X-max</span></td>
+                            <td class="table-value"><input id="gui-nof_maxx" type="number" value="" step="0.01"></td>
+                        </tr>
+                        <tr>
+                            <td class="table-key"><span>Wartość Y-min</span></td>
+                            <td class="table-value"><input id="gui-nof_miny" type="number" value="" step="0.01"></td>
+                        </tr>
+                        <tr>
+                            <td class="table-key"><span>Wartość Y-max</span></td>
+                            <td class="table-value"><input id="gui-nof_maxy" type="number" value="" step="0.01"></td>
+                        </tr>
+                    </table>
+                </fieldset>
+                <fieldset>
+                    <legend>Algorytm</legend>
+                    <table>
+                        <tr>
+                            <td class="table-key"><span>Liczba cząsteczek</span></td>
+                            <td class="table-value"><input id="gui-nof_particles" type="number" value="25" step="1"></td>
+                        </tr>
+                        <tr>
+                            <td class="table-key"><span>Prędkość</span></td>
+                            <td class="table-value"><input id="gui-nof_speed" type="number" value="" step="0.01"></td>
+                        </tr>
+                        <tr>
+                            <td class="table-key"><span>Bezwładność</span></td>
+                            <td class="table-value"><input id="gui-nof_interia" type="number" step="0.001"></td>
+                        </tr>
+                        <tr>
+                            <td class="table-key"><span>Wpływ globalny</span></td>
+                            <td class="table-value"><input id="gui-nof_ginfl" type="number" step="0.001"></td>
+                        </tr>
+                        <tr>
+                            <td class="table-key"><span>Wpływ lokalny</span></td>
+                            <td class="table-value"><input id="gui-nof_linfl" type="number" step="0.001"></td>
+                        </tr>
+                    </table>
+                </fieldset>
+                <fieldset>
+                    <legend>Personalizacja</legend>
+                    <table>
+                        <tr>
+                            <td class="table-key"><span>Wygląd wykresu</span></td>
+                            <td class="table-value">
+                                <select id="gui-select_theme" value="0">
+                                    <option>Portland</option>
+                                    <option>Electric</option>
+                                    <option>Cividis</option>
+                                    <option>Viridis</option>
+                                    <option>YlOrRd</option>
+                                    <option>YlGnBu</option>
+                                    <option>RdBu</option>
+                                    <option>Picnic</option>
+                                    <option>Jet</option>
+                                    <option>Hot</option>
+                                    <option>Greys</option>
+                                    <option>Greens</option>
+                                    <option>Earth</option>
+                                    <option>Bluered</option>
+                                    <option>Blackbody</option>
+                                </select>
+                            </td>
+                        </tr>
+                    </table>
+                </fieldset>
+            </div>
+
+            <!-- GŁÓWNA ZAWARTOŚĆ - WYKRES -->
+            <div class="c-content">
+                <div id="gui-cont_plot" class="c-c-content"></div>
+            </div>
+        </div>
+
+    </body>
+
+</html>

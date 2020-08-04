@@ -1,0 +1,22 @@
+<!doctype html>
+<html>
+    <head>
+        <meta charset="utf-8">
+
+        <!-- PLOTLY: OFFLINE -->
+        <script type="text/javascript" src="js/plotly-latest.min.js"></script>
+        <!-- PLOTLY: ONLINE
+            script src="https://cdn.plot.ly/plotly-latest.min.js"></script-->
+
+        <script src="js/functions.js"></script>
+    </head>
+    <body>
+        <div id="previewer">
+            <!-- PREVIEW -->
+        </div>
+        <script>
+            console.log(window.plot.z_mat);
+            Plotly.new("prewiewer" , [PLOT_DAT] , PLOT_LAY , PLOT_CFG);
+        </script>
+    </body>
+</html>
