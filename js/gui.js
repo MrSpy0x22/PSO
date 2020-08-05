@@ -292,7 +292,8 @@ GUI.btn_state.addEventListener("click" , () => {
             showarrow: true ,
             arrowhead: 2 ,
             arrowcolor: "white" ,
-            font: { color: "white" }
+            font: { color: "white" } ,
+            ay: -70
         } ]
     } , { responsive: true });
 

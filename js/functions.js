@@ -51,6 +51,13 @@ const FUNCTIONS = {
         inc: 2.5 ,
         calculate: (x , y) => 0.5 + ((Math.pow(Math.cos(Math.sin(Math.abs(x * x - y * y)))  , 2) - 0.5) / Math.pow(1 + 0.001 * (x * x + y * y) , 2))
     } ,
+    HolderTable: {
+        name: "Hölder Table" ,
+        x: [ -10 , 10 ] ,
+        y: [ -10 , 10 ] ,
+        inc: 0.5 ,
+        calculate: (x , y) => -Math.abs(Math.sin(x) * Math.cos(y) * Math.exp(Math.abs(1 - (Math.sqrt(x * x + y * y) / Math.PI))))
+    } ,
 
     // Inne
     Paraboloid: {
