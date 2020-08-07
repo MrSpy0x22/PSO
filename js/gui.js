@@ -80,7 +80,12 @@ const PLOT_LAY = {
 */
 const PLOT_DAT = {
     type: "surface" ,
-    showscale: false
+    showscale: false ,
+    contours: {
+        x: { highlight: false } ,
+        y: { highlight: false } ,
+        z: { highlight: false }
+    }
 };
 
 /**
