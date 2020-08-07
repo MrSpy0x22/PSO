@@ -35,11 +35,13 @@ const GUI = {
     nof_ginfl: document.getElementById("gui-nof_ginfl") ,
     nof_linfl: document.getElementById("gui-nof_linfl") ,
 
-    // Pole wyglądu
+    // Inne opcje
     select_theme: document.getElementById("gui-select_theme") ,
+    btn_png: document.getElementById("gui-btn_png") ,
+    btn_jpeg: document.getElementById("gui-btn_jpeg") ,
 
     // Kontener wykresu
-    cont_plot: document.getElementById("gui-cont_plot")
+    cont_plot: document.getElementById("gui-cont_plot") ,
 };
 
 /**
@@ -178,6 +180,9 @@ GUI.btn_refresh.addEventListener("click" , () => {
     generatePlot();
 
 });
+
+GUI.btn_png.addEventListener("click" , () => savePlotAsImage("png"));
+GUI.btn_jpeg.addEventListener("click" , () => savePlotAsImage("jpeg"));
 
 GUI.btn_state.addEventListener("click" , () => {
 
@@ -385,4 +390,19 @@ async function generatePlot() {
 
     // Generowanie
     Plotly.react(GUI.cont_plot , [ PLOT_DAT ] , PLOT_LAY , PLOT_CFG);
+}
+
+function savePlotAsImage(format) {
+
+    let D3 = Plotly.d3;
+    let image = null;
+
+    if (format === "png") {
+        Plotly.downloadImage(GUI.cont_plot , { format: "png" });
+    } else if (format === "jpeg") {
+        Plotly.downloadImage(GUI.cont_plot , { format: "jpeg" });
+    } else {
+        throw new Error(`Nie można zapisać obrazu do formatu "${format}".`);
+    }
+
 }

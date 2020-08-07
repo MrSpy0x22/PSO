@@ -11,21 +11,20 @@ td > * {
     display: block;
 }
 
-.table-key {
-    color: #67A5DC;
-}
-
-#gui-btn_state ,
-#gui-btn_refresh {
+button {
     background: #38383D;
     color: #b1b1b1;
     border-radius: 2px;
     padding: 5px;
     border: none;
 }
-#gui-btn_state:hover ,
-#gui-btn_refresh:hover {
+
+button:hover {
     background: #353B48;
+}
+
+.table-key {
+    color: #67A5DC;
 }
 
 .table-value > input ,
