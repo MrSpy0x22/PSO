@@ -194,7 +194,7 @@ GUI.btn_state.addEventListener("click" , () => {
     // Sprawdzanie liczby wykonywanych serii
     let NumberOfSeries = GUI.nof_series.valueAsNumber;
 
-    if (NumberOfSeries < 1 || NumberOfSeries > 10) {
+    if (NumberOfSeries < 1 || NumberOfSeries > 25) {
         window.alert(`Wartość '${NumberOfSeries}' jest nieprawidłową ilością serii.\r\n. D0zwolona wartość to: 1-10.`);
     }
 
