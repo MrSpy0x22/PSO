@@ -295,11 +295,13 @@ GUI.btn_state.addEventListener("click" , () => {
                 color: 'rgb(150, 150, 150)'
             } ,
         } ,
+        /*
         legend: {
             x: 1 ,
             y: 1 ,
             xanchor: "right"
         } ,
+        */
         annotations: [ {
             x: series_min.i ,
             y: series_min.v ,
