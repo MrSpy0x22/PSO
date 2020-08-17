@@ -10,6 +10,7 @@ const GUI = {
     popup_result: document.getElementById("popup_result") ,
     modal_content: document.getElementById("modal_content") ,
     modal_close: document.getElementById("modal_close") ,
+    modal_title: document.getElementById("modal_title") ,
 
     // Pole z przyciskami
     btn_state: document.getElementById("gui-btn_state") ,
@@ -240,6 +241,7 @@ GUI.btn_state.addEventListener("click" , () => {
         v: null
     };
 
+    let avg = 0;
     for (let i = 0 ; i < NumberOfSeries ; i++) {
         LineData = [];
         let algorithm = new PSO(AlgorithmConfig);
@@ -248,6 +250,8 @@ GUI.btn_state.addEventListener("click" , () => {
 
         let result = algorithm.start();
         
+        avg += (result.error);
+
         let min = Math.min(...LineData);
         let it = LineData.findIndex(e => e == min);
         Lines.push({
@@ -268,6 +272,12 @@ GUI.btn_state.addEventListener("click" , () => {
         //console.log('  position: ' + result.position);
     }
     
+    if (NumberOfSeries > 1) {
+        GUI.modal_title.innerHTML = "Średnie minimum: " + (avg / NumberOfSeries).toFixed(8);
+    }
+    else {
+        GUI.modal_title.innerHTML = "Minimum: " + avg.toFixed(8);
+    }
     GUI.popup_result.style.display = "block";
     ModalVisible = true;
     Plotly.react(GUI.modal_content , Lines , {
