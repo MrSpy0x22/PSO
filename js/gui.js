@@ -273,10 +273,10 @@ GUI.btn_state.addEventListener("click" , () => {
     }
     
     if (NumberOfSeries > 1) {
-        GUI.modal_title.innerHTML = "Średnie minimum: " + (avg / NumberOfSeries).toFixed(8);
+        GUI.modal_title.innerHTML = `Minimum serii: ${series_min.v.toFixed(8)} (${series_min.i})`;
     }
     else {
-        GUI.modal_title.innerHTML = "Minimum: " + avg.toFixed(8);
+        GUI.modal_title.innerHTML = `Minimum: ${series_min.v.toFixed(8)} (${series_min.i})`;
     }
     GUI.popup_result.style.display = "block";
     ModalVisible = true;
