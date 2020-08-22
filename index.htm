@@ -36,13 +36,40 @@
             </div>
         </div>
 
+        <div id="popup_perf" class="modal">
+            <div class="m-window" style="width: 755px !important">
+                <div class="m-header">
+                    <span id="modal_p_close" class="m-close">&times;</span>
+                    <span onclick="exportLogToCSV()" class="m-button">Export</span>&nbsp;
+                    <span id="modal_p_title">Log przeprowadzonych testów</span>
+                </div>
+                <div>
+                    <table class="log_table">
+                        <thead>
+                            <tr>
+                                <th>Lp.</th>
+                                <th>&omega;</th>
+                                <th>&phi;<sub>l</sub></th>
+                                <th>&phi;<sub>g</sub></th>
+                                <th>Cząst.</th>
+                                <th>Epoki</th>
+                                <th>Wynnik</th>
+                            </tr>
+                        </thead>
+                        <tbody id="gui-perf_table" class="m-table_view">
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
         <!-- OKNO APLIKACJI - KONTENER -->
         <div id="container">
 
             <!-- SIDEBAR Z KONFIGURACJĄ -->
             <div class="c-sidebar">
                 <fieldset>
-                    <table>
+                    <table class="settings_view">
                         <tr>
                             <td colspan="2"><button id="gui-btn_state">Szukaj minimum</button></td>
                         </tr>
@@ -50,7 +77,7 @@
                 </fieldset>
                 <fieldset>
                     <legend>Funkcja</legend>
-                    <table>
+                    <table class="settings_view">
                         <tr>
                             <td class="table-key"><span>Funkcja</span></td>
                             <td class="table-value"><select id="gui-select_fun"></select></td>
@@ -71,7 +98,7 @@
                 </fieldset>
                 <fieldset>
                     <legend>Osie</legend>
-                    <table>
+                    <table class="settings_view">
                         <tr>
                             <td class="table-key"><span>Wartość X-min</span></td>
                             <td class="table-value"><input id="gui-nof_minx" type="number" value="" step="0.01"></td>
@@ -95,7 +122,7 @@
                 </fieldset>
                 <fieldset>
                     <legend>Algorytm</legend>
-                    <table>
+                    <table class="settings_view">
                         <tr>
                             <td class="table-key"><span>Prędkość</span></td>
                             <td class="table-value"><input id="gui-nof_speed" type="number" value="" step="0.01"></td>
@@ -124,7 +151,7 @@
                 </fieldset>
                 <fieldset>
                     <legend>Inne</legend>
-                    <table>
+                    <table class="settings_view">
                         <tr>
                             <td class="table-key"><span>Wygląd wykresu</span></td>
                             <td class="table-value">
@@ -146,10 +173,15 @@
                                     <option>Blackbody</option>
                                 </select>
                             </td>
-                            <tr>
-                                <td><button id="gui-btn_png">Zapis do PNG</button></td>
-                                <td><button id="gui-btn_jpeg">Zapis do JPEG</button></td>
-                            </tr>
+                        </tr>
+                        <tr>
+                            <td><button id="gui-btn_png">Zapis do PNG</button></td>
+                            <td><button id="gui-btn_jpeg">Zapis do JPEG</button></td>
+                        </tr>
+                        <tr>
+                            <td><button id="gui-btn_clrtest">Wyczyść log</button></td>
+                            <td><button id="gui-btn_test">Pokaż log</button></td>
+                        </tr>
                         </tr>
                     </table>
                 </fieldset>

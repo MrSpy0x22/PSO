@@ -32,10 +32,29 @@
     width: 75%;
     
     box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2),0 6px 20px 0 rgba(0,0,0,0.19);
-
+    border-radius: 4px;
     
     animation-name: showmodal;
     animation-duration: 0.5s
+}
+
+.m-table_view {
+    height: 300px;
+    overflow: auto;
+}
+
+.m-button {
+    color: white;
+    float: right;
+    padding: 5px 8px;
+    background-color: #38383D;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: medium !important;
+}
+
+.m-button:hover , .m-button:focus {
+    background-color: #353B48;
 }
 
 .m-close {
@@ -44,7 +63,9 @@
     font-weight: bold;
     padding: 5px 8px;
     background-color: #ef2c2c;
+    border-radius: 4px;
     cursor: pointer;
+    margin-left: 5px !important;
 }
 
 .m-close:hover , .m-close:focus {
@@ -58,4 +79,44 @@
 @keyframes showmodal {
     from { top: -300px; opacity: 0 }
     to { top: 0; opacity: 1 }
+}
+
+.log_table {
+    width: 100%;
+    background: #171717;
+}
+
+.log_table > thead > tr > th ,
+.log_table > tbody > tr > td {
+    padding: 6px;
+}
+
+.log_table > thead > tr {
+    background: #232323;
+}
+
+.log_table > tbody > tr:hover {
+    background: #353B48;
+    transition: .2s;
+}
+
+.log_table > tbody > tr > td {
+    text-align: center;
+}
+
+.log_table th , .log_table td {
+    width: 70px;
+}
+
+.log_table th:last-child , .log_table td:last-child {
+    width: 300px;
+}
+
+.log_table > thead {
+    display: block;
+}
+
+.log_table > tbody {
+    overflow: auto;
+    display: block;
 }

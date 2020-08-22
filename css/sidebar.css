@@ -1,12 +1,12 @@
-table {
+.settings_view {
     width: 100%;
 }
 
-td {
+.settings_view > tbody > tr > td {
     width: 50%;
 }
 
-td > * {
+.settings_view > tbody > tr > td > * {
     width: 100%;
     display: block;
 }

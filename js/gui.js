@@ -4,13 +4,19 @@
 /**
  * Obiekt zawierający elementy GUI, na któych wykonywane są operacje w kodzie.
 */
+let TestNumber = 0;
 const GUI = {
 
     // Modal
     popup_result: document.getElementById("popup_result") ,
+    popup_perf: document.getElementById("popup_perf") ,
+
     modal_content: document.getElementById("modal_content") ,
     modal_close: document.getElementById("modal_close") ,
     modal_title: document.getElementById("modal_title") ,
+
+    modal_p_close: document.getElementById("modal_p_close") ,
+    modal_p_title: document.getElementById("modal_p_title") ,
 
     // Pole z przyciskami
     btn_state: document.getElementById("gui-btn_state") ,
@@ -40,9 +46,13 @@ const GUI = {
     select_theme: document.getElementById("gui-select_theme") ,
     btn_png: document.getElementById("gui-btn_png") ,
     btn_jpeg: document.getElementById("gui-btn_jpeg") ,
+    btn_test: document.getElementById("gui-btn_test") ,
+    btn_clrtest: document.getElementById("gui-btn_clrtest") ,
 
     // Kontener wykresu
     cont_plot: document.getElementById("gui-cont_plot") ,
+    // Tabela
+    pref_table: document.getElementById("gui-perf_table")
 };
 
 /**
@@ -124,9 +134,19 @@ GUI.modal_close.addEventListener("click" , () => {
 
 });
 
+GUI.modal_p_close.addEventListener("click" , () => {
+
+    // Ukrywanie okna
+    GUI.popup_perf.style.display = "none";
+    // EReset flagi widoczności
+    ModalVisible = false;
+    // Niszczenie wygresu
+    GUI.pref_table.getElementsByTagName("tbody").innerHTML = "";
+});
+
 window.addEventListener("load" , () => {
 
-    // Reset
+    // Reset pól
     GUI.nof_series.value = 1;
     GUI.nof_iterations.value = 25;
     GUI.check_3d.checked = true;
@@ -159,7 +179,20 @@ window.addEventListener("load" , () => {
 });
 
 GUI.select_fun.addEventListener("change" , () => {
+
+    // Pytanie o czyszczenie logu
+    if (TestNumber > 0) {
+        if (window.confirm("Log testów zostanie wymazany. Kontynuować?")) {
+            TestNumber = 0;
+            GUI.pref_table.innerHTML = "";
+        } else {
+            return;
+        }
+    }
+
+    // Wybór nowej funkcji i zapamiętywanie jej do zmiennej
     CurrentFun = getFunctionFromName(GUI.select_fun.value);
+    // Wprowadzanie zmian do ustawieć osi
     applySelectedFunction();
 });
 
@@ -241,7 +274,6 @@ GUI.btn_state.addEventListener("click" , () => {
         v: null
     };
 
-    let avg = 0;
     for (let i = 0 ; i < NumberOfSeries ; i++) {
         LineData = [];
         let algorithm = new PSO(AlgorithmConfig);
@@ -249,8 +281,6 @@ GUI.btn_state.addEventListener("click" , () => {
         //console.log('[epoch]\t[error]\t\t\t[position]\n');
 
         let result = algorithm.start();
-        
-        avg += (result.error);
 
         let min = Math.min(...LineData);
         let it = LineData.findIndex(e => e == min);
@@ -324,8 +354,60 @@ GUI.btn_state.addEventListener("click" , () => {
         } ]
     } , { responsive: true });
 
+    // Zapisywanie do logó
+    TestNumber++;
+    let tr = document.createElement("tr");
+    
+    let td_lp = document.createElement("td");
+    td_lp.innerHTML = TestNumber;
+    tr.appendChild(td_lp);
+
+    let td_omega = document.createElement("td");
+    td_omega.innerHTML = GUI.nof_interia.value;
+    tr.appendChild(td_omega);
+
+    let td_phi_g = document.createElement("td");
+    td_phi_g.innerHTML = GUI.nof_ginfl.value;
+    tr.appendChild(td_phi_g);
+
+    let td_pli_l = document.createElement("td");
+    td_pli_l.innerHTML = GUI.nof_linfl.value;
+    tr.appendChild(td_pli_l);
+
+    let td_part = document.createElement("td");
+    td_part.innerHTML = GUI.nof_particles.value;
+    tr.appendChild(td_part);
+
+    let td_epoches = document.createElement("td");
+    td_epoches.innerHTML = GUI.nof_iterations.value;
+    tr.appendChild(td_epoches);
+
+    let td_result = document.createElement("td");
+    td_result.innerHTML = series_min.v.toFixed(8) + " (" + series_min.i + " epoka)";
+    tr.appendChild(td_result);
+
+    GUI.pref_table.appendChild(tr);
+
 });
 
+GUI.btn_test.addEventListener("click" , () => {
+    if (TestNumber == 0) {
+        window.alert("Log jest pusty.");
+    } else {
+        GUI.popup_perf.style.display = "block";
+        ModalVisible = true;
+    }
+});
+
+GUI.btn_clrtest.addEventListener("click" , () => {
+    if (TestNumber > 0) {
+        window.alert("Wyczyszczono cały log (liczba rekordów: " + TestNumber + ").");
+        GUI.pref_table.innerHTML = "";
+        TestNumber = 0;
+    } else {
+        window.alert("Log jest już pusty.");
+    }
+});
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -422,4 +504,33 @@ function savePlotAsImage(format) {
         throw new Error(`Nie można zapisać obrazu do formatu "${format}".`);
     }
 
+}
+
+function exportLogToCSV() {
+    let textRows = ["Lp.,Bezwład.,Glob.,Lok.,Cząst.,Epoki,Wynik"];
+    let csv = [];
+    let rows = GUI.pref_table.getElementsByTagName("tr");
+
+    for (let i = 0 ; i < rows.length ; i++) {
+        
+        let cells = rows[i].getElementsByTagName("td");
+        let line = [];
+
+        for (let j = 0 ; j < cells.length ; j++) {
+            line.push(cells[j].innerHTML);
+        }
+
+        textRows.push(line.join(","));
+
+    }
+
+    csv.push(textRows.join("\n"));
+
+    let file = new Blob([csv] , { type: "text/csv;charset=UTF-8" });
+    let link = document.createElement("a");
+    link.download = CurrentFun.name;
+    link.href = window.URL.createObjectURL(file);
+    link.style.display = "none";
+    document.body.appendChild(link);
+    link.click();
 }
