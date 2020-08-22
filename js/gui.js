@@ -260,9 +260,9 @@ GUI.btn_state.addEventListener("click" , () => {
         localAcceleration: GUI.nof_linfl.valueAsNumber ,
         
         onIterationFinished: (epochIndex, bestGlobalSolution) => {
-            let error = bestGlobalSolution.error;
+            let error = bestGlobalSolution.error.toFixed(GUI.nof_precision.valueAsNumber);
             let position = bestGlobalSolution.position;
-            LineData.push(error.toFixed(GUI.nof_precision.valueAsNumber));
+            LineData.push(error);
             Range.push(epochIndex);
             //console.log(epochIndex + '\t' + error + '\t[' + position + ']');
 
@@ -356,7 +356,7 @@ GUI.btn_state.addEventListener("click" , () => {
         } ]
     } , { responsive: true });
 
-    // Zapisywanie do logó
+    // Zapisywanie do logów
     TestNumber++;
     let tr = document.createElement("tr");
     
@@ -385,7 +385,7 @@ GUI.btn_state.addEventListener("click" , () => {
     tr.appendChild(td_epoches);
 
     let td_result = document.createElement("td");
-    td_result.innerHTML = series_min.v.toFixed(8) + " (" + series_min.i + " epoka)";
+    td_result.innerHTML = series_min.v + " (" + series_min.i + " epoka)";
     tr.appendChild(td_result);
 
     GUI.pref_table.appendChild(tr);

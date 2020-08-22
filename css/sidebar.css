@@ -23,6 +23,11 @@ button:hover {
     background: #353B48;
 }
 
+.b-start {
+    height: 40px;
+    font-weight: bold;
+}
+
 .table-key {
     color: #67A5DC;
 }
