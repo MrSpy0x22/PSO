@@ -28,6 +28,7 @@ const GUI = {
     nof_iterations: document.getElementById("gui-nof_iterations") ,
     nof_series: document.getElementById("gui-nof_series") ,
     check_3d: document.getElementById("gui-check_3d") ,
+    nof_precision: document.getElementById("gui-nof_precision") ,
 
     // Osie
     nof_minx: document.getElementById("gui-nof_minx") ,
@@ -148,6 +149,7 @@ window.addEventListener("load" , () => {
 
     // Reset pól
     GUI.nof_series.value = 1;
+    GUI.nof_precision.value = 8;
     GUI.nof_iterations.value = 25;
     GUI.check_3d.checked = true;
     GUI.check_negatives.checked = false;
@@ -260,7 +262,7 @@ GUI.btn_state.addEventListener("click" , () => {
         onIterationFinished: (epochIndex, bestGlobalSolution) => {
             let error = bestGlobalSolution.error;
             let position = bestGlobalSolution.position;
-            LineData.push(error);
+            LineData.push(error.toFixed(GUI.nof_precision.valueAsNumber));
             Range.push(epochIndex);
             //console.log(epochIndex + '\t' + error + '\t[' + position + ']');
 
@@ -292,7 +294,7 @@ GUI.btn_state.addEventListener("click" , () => {
 
         // Aktualizacja wartości globalnej
         if (series_min.v == null || series_min.v > min) {
-            series_min.v = min;
+            series_min.v = min.toFixed(GUI.nof_precision.valueAsNumber);
             series_min.i = it;
         }
 
@@ -303,10 +305,10 @@ GUI.btn_state.addEventListener("click" , () => {
     }
     
     if (NumberOfSeries > 1) {
-        GUI.modal_title.innerHTML = `Minimum serii: ${series_min.v.toFixed(8)} (${series_min.i})`;
+        GUI.modal_title.innerHTML = `Minimum serii: ${series_min.v} (${series_min.i})`;
     }
     else {
-        GUI.modal_title.innerHTML = `Minimum: ${series_min.v.toFixed(8)} (${series_min.i})`;
+        GUI.modal_title.innerHTML = `Minimum: ${series_min.v} (${series_min.i})`;
     }
     GUI.popup_result.style.display = "block";
     ModalVisible = true;
