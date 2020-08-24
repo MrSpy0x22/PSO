@@ -10,5 +10,6 @@ body {
     font-family: Arial,x-locale-body,sans-serif;
     font-size: .85rem;
 
-    color: black;
+    color: white;
+    background: black;
 }

@@ -124,27 +124,9 @@ let LineData = [];
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
-GUI.modal_close.addEventListener("click" , () => {
-
-    // Ukrywanie okna
-    GUI.popup_result.style.display = "none";
-    // EReset flagi widoczności
-    ModalVisible = false;
-    // Niszczenie wygresu
-    Plotly.purge(GUI.modal_content);
-
-});
-
-GUI.modal_p_close.addEventListener("click" , () => {
-
-    // Ukrywanie okna
-    GUI.popup_perf.style.display = "none";
-    // EReset flagi widoczności
-    ModalVisible = false;
-    // Niszczenie wygresu
-    GUI.pref_table.getElementsByTagName("tbody").innerHTML = "";
-});
-
+/**
+ * Event załadowania strony
+*/
 window.addEventListener("load" , () => {
 
     // Reset pól
@@ -178,6 +160,27 @@ window.addEventListener("load" , () => {
     CurrentFun = getFunctionFromName(GUI.select_fun.value);
     applySelectedFunction();
 
+});
+
+GUI.modal_close.addEventListener("click" , () => {
+
+    // Ukrywanie okna
+    GUI.popup_result.style.display = "none";
+    // EReset flagi widoczności
+    ModalVisible = false;
+    // Niszczenie wygresu
+    Plotly.purge(GUI.modal_content);
+
+});
+
+GUI.modal_p_close.addEventListener("click" , () => {
+
+    // Ukrywanie okna
+    GUI.popup_perf.style.display = "none";
+    // EReset flagi widoczności
+    ModalVisible = false;
+    // Niszczenie wygresu
+    GUI.pref_table.getElementsByTagName("tbody").innerHTML = "";
 });
 
 GUI.select_fun.addEventListener("change" , () => {
@@ -238,7 +241,6 @@ GUI.btn_state.addEventListener("click" , () => {
     LineData = [];
 
     let Range = [];
-
     let Lines = [];
 
     // Obiekt konfiguracji algorytmu (jednakowy dla każdej serii)
@@ -259,22 +261,15 @@ GUI.btn_state.addEventListener("click" , () => {
         globalAcceleration: GUI.nof_ginfl.valueAsNumber ,
         localAcceleration: GUI.nof_linfl.valueAsNumber ,
         
-        onIterationFinished: (epochIndex, bestGlobalSolution) => {
+        onIterationFinished: (epochIndex , bestGlobalSolution) => {
             let error = bestGlobalSolution.error.toFixed(GUI.nof_precision.valueAsNumber);
-            let position = bestGlobalSolution.position;
+            //let position = bestGlobalSolution.position;
             LineData.push(error);
             Range.push(epochIndex);
-            //console.log(epochIndex + '\t' + error + '\t[' + position + ']');
-
-            // Aktualizacja pozycji cząsteczek
-            // ...
         }
     };
 
-    let series_min = {
-        i: null ,
-        v: null
-    };
+    let series_min = { i: null , v: null };
 
     for (let i = 0 ; i < NumberOfSeries ; i++) {
         LineData = [];
@@ -289,12 +284,12 @@ GUI.btn_state.addEventListener("click" , () => {
         Lines.push({
             x: [...Range] ,
             y: [...LineData] ,
-            name: `Seria ${i + 1} (iter: ${it + 1}, min: ${min})`
+            name: `Seria ${i + 1} (iter: ${it}, min: ${min})`
         });
 
         // Aktualizacja wartości globalnej
-        if (series_min.v == null || series_min.v > min) {
-            series_min.v = min.toFixed(GUI.nof_precision.valueAsNumber);
+        if (series_min.v == null || (series_min.v == min && series_min.i > it) || series_min.v > min) {
+            series_min.v = min;
             series_min.i = it;
         }
 
