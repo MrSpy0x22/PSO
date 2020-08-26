@@ -10,7 +10,7 @@
         <link href="css/sidebar.css" rel="stylesheet">
         <link href="css/modal.css" rel="stylesheet">
 
-        <!-- SCRIPTS -->
+        <!-- SKRYPTY -->
         <script type="text/javascript" src="js/functions.js"></script>
         <script type="text/javascript" src="js/pso.js"></script>
         <script type="text/javascript" src="js/gui.js" defer></script>
@@ -32,18 +32,22 @@
                     <span id="modal_close" class="m-close">&times;</span>
                     <span id="modal_title">Podsumowanie</span>
                 </div>
+                <!-- Kontener wykresu -->
                 <div id="modal_content"></div>
             </div>
         </div>
 
+        <!-- POP-UP Z LOGIEM -->
         <div id="popup_perf" class="modal">
             <div class="m-window" style="width: 755px !important">
                 <div class="m-header">
                     <span id="modal_p_close" class="m-close">&times;</span>
-                    <span onclick="exportLogToCSV()" class="m-button">Export</span>&nbsp;
+                    <span onclick="exportLogToCSV()" class="m-button">CSV</span>
+                    <span onclick="exportLogToLatex()" class="m-button">LaTeX</span>
                     <span id="modal_p_title">Log przeprowadzonych testów</span>
                 </div>
                 <div>
+                    <!-- Tabela -->
                     <table class="log_table">
                         <thead>
                             <tr>
@@ -63,7 +67,7 @@
             </div>
         </div>
 
-        <!-- OKNO APLIKACJI - KONTENER -->
+        <!-- OKNO APLIKACJI - KONTENER APLIKACJI -->
         <div id="container">
 
             <!-- SIDEBAR Z KONFIGURACJĄ -->
@@ -130,11 +134,11 @@
                     </table>
                 </fieldset>
                 
-                <!-- DOstosowanie algorytmu -->
+                <!-- Dostosowanie algorytmu -->
                 <fieldset>
                     <legend>Algorytm</legend>
                     <table class="settings_view">
-                        <tr>
+                        <tr style="display:none">
                             <td class="table-key"><span>Prędkość</span></td>
                             <td class="table-value"><input id="gui-nof_speed" type="number" value="" step="0.01"></td>
                         </tr>
@@ -200,7 +204,7 @@
                 </fieldset>
             </div>
 
-            <!-- GŁÓWNA ZAWARTOŚĆ - WYKRES -->
+            <!-- KONTENER WYKRESU WYBRANEJ FUNKCJI -->
             <div class="c-content">
                 <div id="gui-cont_plot" class="c-c-content"></div>
             </div>

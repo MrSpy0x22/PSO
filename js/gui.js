@@ -4,7 +4,6 @@
 /**
  * Obiekt zawierający elementy GUI, na któych wykonywane są operacje w kodzie.
 */
-let TestNumber = 0;
 const GUI = {
 
     // Modal
@@ -109,6 +108,10 @@ const PLOT_CFG = {
 };
 
 /**
+ * Numer aktualnego badania.
+*/
+let TestNumber = 0;
+/**
  * Referencja do aktualnie wybranej funkcji.
 */
 let CurrentFun = null;
@@ -117,10 +120,10 @@ let CurrentFun = null;
  * Pole odwracania wartości funkcji.
 */
 let ReverseFunction = false;
-
-let UpdateRequired = false;
+/**
+ * Flaga oznaczająca, że okno POP-UP jest widoczne
+*/
 let ModalVisible = false;
-let LineData = [];
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -162,6 +165,9 @@ window.addEventListener("load" , () => {
 
 });
 
+/**
+ * Zamykanie okien POP-UP
+*/
 GUI.modal_close.addEventListener("click" , () => {
 
     // Ukrywanie okna
@@ -172,7 +178,6 @@ GUI.modal_close.addEventListener("click" , () => {
     Plotly.purge(GUI.modal_content);
 
 });
-
 GUI.modal_p_close.addEventListener("click" , () => {
 
     // Ukrywanie okna
@@ -183,6 +188,9 @@ GUI.modal_p_close.addEventListener("click" , () => {
     GUI.pref_table.getElementsByTagName("tbody").innerHTML = "";
 });
 
+/**
+ * Zmiana funkcji.
+*/
 GUI.select_fun.addEventListener("change" , () => {
 
     // Pytanie o czyszczenie logu
@@ -201,6 +209,9 @@ GUI.select_fun.addEventListener("change" , () => {
     applySelectedFunction();
 });
 
+/**
+ * Negowanie wartości.
+*/
 GUI.check_negatives.addEventListener("change" , () => {
 
     ReverseFunction = GUI.check_negatives.checked ? true : false ;
@@ -208,6 +219,9 @@ GUI.check_negatives.addEventListener("change" , () => {
 
 });
 
+/**
+ * Widok 3D lub kontur.
+*/
 GUI.check_3d.addEventListener("click" , () => {
 
     PLOT_DAT.type = GUI.check_3d.checked ? "surface" : "contour"; 
@@ -215,32 +229,69 @@ GUI.check_3d.addEventListener("click" , () => {
 
 });
 
+/**
+ * Wygląd wukresu.
+*/
 GUI.select_theme.addEventListener("change" , () => {
     generatePlot();
 });
 
+/**
+ * Odświeżanie widoku.
+*/
 GUI.btn_refresh.addEventListener("click" , () => {
-
     generatePlot();
-
 });
 
+/**
+ * Eksport widoku wykresu funkcji do obrazu.
+*/
 GUI.btn_png.addEventListener("click" , () => savePlotAsImage("png"));
 GUI.btn_jpeg.addEventListener("click" , () => savePlotAsImage("jpeg"));
 
+/**
+ * Pokazywanie logu.
+*/
+GUI.btn_test.addEventListener("click" , () => {
+    if (TestNumber == 0) {
+        window.alert("Log jest pusty.");
+    } else {
+        GUI.popup_perf.style.display = "block";
+        ModalVisible = true;
+    }
+});
+
+/**
+ * Czyszczenie logu.
+*/
+GUI.btn_clrtest.addEventListener("click" , () => {
+    if (TestNumber > 0) {
+        window.alert("Wyczyszczono cały log (liczba rekordów: " + TestNumber + ").");
+        GUI.pref_table.innerHTML = "";
+        TestNumber = 0;
+    } else {
+        window.alert("Log jest już pusty.");
+    }
+});
+
+/**
+ * Uruchamianie algorytmu.
+*/
 GUI.btn_state.addEventListener("click" , () => {
 
     // Sprawdzanie liczby wykonywanych serii
     let NumberOfSeries = GUI.nof_series.valueAsNumber;
 
     if (NumberOfSeries < 1 || NumberOfSeries > 25) {
-        window.alert(`Wartość '${NumberOfSeries}' jest nieprawidłową ilością serii.\r\n. D0zwolona wartość to: 1-10.`);
+        window.alert(`Wartość '${NumberOfSeries}' jest nieprawidłową ilością serii.\r\n. Dozwolona wartość to: 1-10.`);
+    }
+    if (GUI.nof_precision.valueAsNumber < 2 || GUI.nof_precision.valueAsNumber > 16) {
+        window.alert(`Wartość '${NumberOfSeries}' jest nieprawidłową wartością precyzji.\r\n. Dozwolona wartość to: 2-16.`);
     }
 
-    //Resetowanie tablicy przechowującej dane jednej serii
-    LineData = [];
-
+    // Tablica zakresu na osi
     let Range = [];
+    // Wykresliniowy każdej z serii
     let Lines = [];
 
     // Obiekt konfiguracji algorytmu (jednakowy dla każdej serii)
@@ -269,44 +320,48 @@ GUI.btn_state.addEventListener("click" , () => {
         }
     };
 
-    let series_min = { i: null , v: null };
+    // Tablica z wynikami
+    let LineData = [];
+    // Obiekt najlepszego wyniku
+    let SeriesMin = { i: null , v: null };
 
+    // Obliczenia dla każdej serii
     for (let i = 0 ; i < NumberOfSeries ; i++) {
+        // Reset danych
         LineData = [];
-        let algorithm = new PSO(AlgorithmConfig);
+        let Algorithm = new PSO(AlgorithmConfig);
+        Algorithm.start();
 
-        //console.log('[epoch]\t[error]\t\t\t[position]\n');
-
-        let result = algorithm.start();
-
+        // Szukanie minimum
         let min = Math.min(...LineData);
+        // Szukanie epoki
         let it = LineData.findIndex(e => e == min);
+        // Dodawanie do obiektu wykresów liniowych
         Lines.push({
             x: [...Range] ,
             y: [...LineData] ,
-            name: `Seria ${i + 1} (iter: ${it}, min: ${min})`
+            name: `Seria ${i + 1} (epoka: ${it}, min: ${min})`
         });
 
         // Aktualizacja wartości globalnej
-        if (series_min.v == null || (series_min.v == min && series_min.i > it) || series_min.v > min) {
-            series_min.v = min;
-            series_min.i = it;
+        if (SeriesMin.v == null || (SeriesMin.v == min && SeriesMin.i > it) || SeriesMin.v > min) {
+            SeriesMin.v = min;
+            SeriesMin.i = it;
         }
-
-        //console.log('-------------------------------');
-        //console.log('Solution:');
-        //console.log('  error: ' + result.error);
-        //console.log('  position: ' + result.position);
     }
     
+    // Tytuł POP-UPu
     if (NumberOfSeries > 1) {
-        GUI.modal_title.innerHTML = `Minimum serii: ${series_min.v} (${series_min.i})`;
+        GUI.modal_title.innerHTML = `Minimum serii: ${SeriesMin.v} (${SeriesMin.i})`;
     }
     else {
-        GUI.modal_title.innerHTML = `Minimum: ${series_min.v} (${series_min.i})`;
+        GUI.modal_title.innerHTML = `Minimum: ${SeriesMin.v} (${SeriesMin.i})`;
     }
+    // Pokazywanie POP-UPu
     GUI.popup_result.style.display = "block";
     ModalVisible = true;
+
+    // Tworzenie wykresów
     Plotly.react(GUI.modal_content , Lines , {
         margin: { t: 40 , b: 40 , l: 40 , r: 40 } ,
         showlegend: true ,
@@ -332,17 +387,10 @@ GUI.btn_state.addEventListener("click" , () => {
                 color: 'rgb(150, 150, 150)'
             } ,
         } ,
-        /*
-        legend: {
-            x: 1 ,
-            y: 1 ,
-            xanchor: "right"
-        } ,
-        */
         annotations: [ {
-            x: series_min.i ,
-            y: series_min.v ,
-            text: `${series_min.v}` ,
+            x: SeriesMin.i ,
+            y: SeriesMin.v ,
+            text: `${SeriesMin.v}` ,
             showarrow: true ,
             arrowhead: 2 ,
             arrowcolor: "white" ,
@@ -380,30 +428,11 @@ GUI.btn_state.addEventListener("click" , () => {
     tr.appendChild(td_epoches);
 
     let td_result = document.createElement("td");
-    td_result.innerHTML = series_min.v + " (" + series_min.i + " epoka)";
+    td_result.innerHTML = SeriesMin.v + " (" + SeriesMin.i + " epoka)";
     tr.appendChild(td_result);
 
     GUI.pref_table.appendChild(tr);
 
-});
-
-GUI.btn_test.addEventListener("click" , () => {
-    if (TestNumber == 0) {
-        window.alert("Log jest pusty.");
-    } else {
-        GUI.popup_perf.style.display = "block";
-        ModalVisible = true;
-    }
-});
-
-GUI.btn_clrtest.addEventListener("click" , () => {
-    if (TestNumber > 0) {
-        window.alert("Wyczyszczono cały log (liczba rekordów: " + TestNumber + ").");
-        GUI.pref_table.innerHTML = "";
-        TestNumber = 0;
-    } else {
-        window.alert("Log jest już pusty.");
-    }
 });
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
@@ -488,10 +517,12 @@ async function generatePlot() {
     Plotly.react(GUI.cont_plot , [ PLOT_DAT ] , PLOT_LAY , PLOT_CFG);
 }
 
+/**
+ * Zapisywanie wykresu jako obraz.
+ * @param {string} format Rozszerzenie pliku, do któego ma zostać zapisany wykres.
+ * @throws {Error} Jeżeli podano zły format.
+*/
 function savePlotAsImage(format) {
-
-    let D3 = Plotly.d3;
-    let image = null;
 
     if (format === "png") {
         Plotly.downloadImage(GUI.cont_plot , { format: "png" });
@@ -503,6 +534,9 @@ function savePlotAsImage(format) {
 
 }
 
+/**
+ * Eksportuje tabelę logu do CSV.
+*/
 function exportLogToCSV() {
     let textRows = ["Lp.,Bezwład.,Glob.,Lok.,Cząst.,Epoki,Wynik"];
     let csv = [];
@@ -522,12 +556,53 @@ function exportLogToCSV() {
     }
 
     csv.push(textRows.join("\n"));
+    forceDownload(csv , "csv");
+}
 
-    let file = new Blob([csv] , { type: "text/csv;charset=UTF-8" });
+/**
+ * Eksportuje tabelę logu do tabeli w stylu LaTeX-owym.
+*/
+function exportLogToLatex() {
+    let textRows = [];
+
+    let latex = [];
+    let rows = GUI.pref_table.getElementsByTagName("tr");
+
+    for (let i = 0 ; i < rows.length ; i++) {
+        
+        let cells = rows[i].getElementsByTagName("td");
+        let line = [];
+
+        for (let j = 0 ; j < cells.length ; j++) {
+            line.push(cells[j].innerHTML);
+        }
+
+        textRows.push(line.join(" & "));
+
+    }
+
+    latex.push("\\begin{tabular}{|c|c|c|c|c|c|c|}\n" +
+                "Lp. & $\\omega$ & $\\varphi_l$ & $\\varphi_g$ & Cząst. & Epoki & Wynik \\\\\n" +
+                "\\hline\n" +
+                textRows.join("\\\\\n\\hline\n") +
+                "\\\\\n\\hline\nend{tabular}");
+    forceDownload(latex);
+    console.log(latex);
+}
+
+/**
+ * EWymusza pobieranie pliku.
+ * @param {string} text Tekst, który ma zostać dodany do pliku.
+ * @param {string} type Typ pliku.
+*/
+function forceDownload(text , type = "plain") {
+
+    let file = new Blob([text] , { type: `text/${type};charset=UTF-8` });
     let link = document.createElement("a");
     link.download = CurrentFun.name;
     link.href = window.URL.createObjectURL(file);
     link.style.display = "none";
     document.body.appendChild(link);
     link.click();
+    
 }

@@ -1,5 +1,21 @@
 'use strict';
 
+/*
+ * OBIEKT Z DANYMI WSZYSTKICH FUNKCJI
+ *  Aby dopisać nową funkcję należy stworzyć dodatkowy obiekt wewnątrz:
+ * 
+ *      Nazwa: {
+ *          name: "nazwa funkcji",
+ *          x: [od , do] ,
+ *          y: [od , do] ,
+ *          inc: 0.2,
+ *          calculate: (x,y) =? { ... tutaj wzór w wersji JS ... }
+ *      }
+ * 
+ *  Program przy otwieraniu automatycznie odczyta nową funkcję i będzie
+ *  zdolny do optymalizacji i rysowania wykresu.
+*/
+
 const FUNCTIONS = {
 
     Ackley: {
@@ -86,7 +102,7 @@ const FUNCTIONS = {
 /**
  * Szuka funkcji po podanej nazwie.
  * @param {string} name Nazwa szukanej funkcji (case insensitive).
- * @returns {object} Referencja do elementu funkcji z obiektu FUNCTIONS.
+ * @returns {object} Referencja do elementu funkcji z obiektu FUNCTIONS lub NULL w przypadku błędu.
 */
 function getFunctionFromName(name) {
 

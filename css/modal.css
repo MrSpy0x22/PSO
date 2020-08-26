@@ -51,6 +51,7 @@
     border-radius: 4px;
     cursor: pointer;
     font-size: medium !important;
+    margin-right: 5px !important;
 }
 
 .m-button:hover , .m-button:focus {
@@ -65,7 +66,7 @@
     background-color: #ef2c2c;
     border-radius: 4px;
     cursor: pointer;
-    margin-left: 5px !important;
+    margin-left: 3px !important;
 }
 
 .m-close:hover , .m-close:focus {
